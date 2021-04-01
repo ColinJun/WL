@@ -7,9 +7,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class HelloController {
 
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
+
     @GetMapping("/hello")
     public String hello() {
-        return "hello";
+        return "footer";
     }
 
     @GetMapping("/hello/dto")
@@ -19,14 +24,12 @@ public class HelloController {
     }
 
     @PostMapping("/test")
-    public String test(@RequestBody Info info){
-        return info.getName() + "의 블로그입니다. " + info.getId();
+    public String test(@ModelAttribute("ggggg") Info info){
+        return info.getName() + " AND " + info.getId();
     }
 
-    @PostMapping("/blog")
+    @PostMapping("/test2")
     public String blogPost(@RequestBody Info info){
-        System.out.println("하하"+info.getId()+info.getName());
-        return info.getName() + "의 블로그입니다. " + info.getId();
+        return info.getName() + " AND " + info.getId();
     }
-
 }

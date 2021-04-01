@@ -29,6 +29,15 @@ public class HelloControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    public void index가_리턴된다() throws Exception {
+        String index = "index";
+
+        mvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(index));
+    }
+
+    @Test
     public void hello가_리턴된다() throws Exception {
         String hello = "hello";
 
@@ -53,35 +62,31 @@ public class HelloControllerTest {
 
     @Test
     public void RequestBody테스트() throws Exception {
-        //String content = objectMapper.writeValueAsString(new Info("데일", "dale"));
-        String content = objectMapper.writeValueAsString(new Info("데일", "dale"));
 
+        String content = objectMapper.writeValueAsString(new Info("준호", "wnsgh"));
+       // String name = "준호";
 
-//        mvc.perform(post("/test")
-//                .content(content))
-//                //.andDo(print())
-//                .andExpect(status().isOk());
-
+       /*mvc.perform(post("/test").param("name", "준호")
+                .param("id", "wnsgh"))
+               .andExpect(status().isOk());*/
         mvc.perform(post("/test")
                 .content(content)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON) //application/x-www-form-urlencoded; charset=UTF-8;
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-                //.andExpect(content().string("데일의 블로그입니다. dale"))
-                //.andDo(print());
     }
 
     @Test
     public void 테스트_POST() throws Exception {
 
-        String content = objectMapper.writeValueAsString(new Info("데일", "dale"));
-        System.out.println(content);
-        mvc.perform(post("/blog")
-                .content(content)
+       // String content = objectMapper.writeValueAsString(new Info("stir", "123"));
+
+        mvc.perform(post("/test2")
+                .content("{'name':'stir', 'id':'123'}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("데일의 블로그입니다. dale"))
+                .andExpect(content().string("stir AND 123"))
                 .andDo(print());
     }
 }
