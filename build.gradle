@@ -26,6 +26,7 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.projectlombok:lombok')
     compile('org.springframework.boot:spring-boot-starter-mustache')
