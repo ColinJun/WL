@@ -2,6 +2,8 @@ package com.WL.web;
 
 import com.WL.web.dto.HelloResponseDto;
 import com.WL.web.dto.Info;
+import com.WL.web.dto.SummonerDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,28 +24,32 @@ public class HelloController {
 
     @GetMapping("/")
     public String index() {
-        String SummonerName = "hideOnBush";//name.replaceAll(" ", "%20");
+        ObjectMapper objectMapper = new ObjectMapper();
+        SummonerDto summoner = null;	// DTO
+
+        String SummonerName = "허브밀크";//name.replaceAll(" ", "%20");
         String requestURL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+ SummonerName + "?api_key=" + Key;
 
-        System.out.println("하하하"+Key);
-        System.out.println("하하하"+requestURL);
+        String index = "";
         try {
             HttpClient client = HttpClientBuilder.create().build(); // HttpClient 생성
             HttpGet getRequest = new HttpGet(requestURL); //GET 메소드 URL 생성
 
             HttpResponse response = client.execute(getRequest);
 
+
             //Response 출력
             System.out.println(response);
             if (response.getStatusLine().getStatusCode() == 200) {
                 ResponseHandler<String> handler = new BasicResponseHandler();
                 String body = handler.handleResponse(response);
-                System.out.println("ㅎㅎ"+body);
-                //summoner = objectMapper.readValue(body, Summoner.class);   // String to Object로 변환
-
+                summoner = objectMapper.readValue(body, SummonerDto.class);   // String to Object로 변환
+                //System.out.println(summoner);
+                index = summoner.getName()+"님의 소환사 레벨은 "+summoner.getSummonerLevel()+"입니다";
+                System.out.println(summoner.getName()+"님의 소환사 레벨은 "+summoner.getSummonerLevel()+"입니다");
             }
         } catch (Exception e){
-            System.err.println("하하하"+e.toString());
+            System.err.println(e.toString());
         }
 
 
