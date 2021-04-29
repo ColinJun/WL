@@ -1,3 +1,4 @@
 .gradle
 .idea
-src/main/resources/apiKey.properties
+src/main/resources/application-private.properties
+application-private.properties
