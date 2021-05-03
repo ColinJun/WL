@@ -58,6 +58,21 @@ public class HelloController {
         return "index";
     }
 
+    @RequestMapping(value="/player/{id}", method=RequestMethod.GET)
+    public Player getPlayers(@PathVariable("id") final String id) throws Exception{
+
+        Player player;
+
+        if(RestApplication.PlayerHm.containsKey(id)) {
+            player = RestApplication.PlayerHm.get(id);
+        } else {
+            throw new Exception("Player " + id + "does not exists");
+        }
+
+        return player;
+    }
+
+
     @GetMapping("/hello")
     public String hello() {
         return "footer";
