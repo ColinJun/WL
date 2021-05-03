@@ -11,25 +11,26 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-
+@ConfigurationProperties("key")
 @RequiredArgsConstructor
 @Controller
 public class HelloController {
-    @Value("${Key}")
-    private String Key;
+    @Autowired
+    ConfigProperty configProperty;
 
     @GetMapping("/")
     public String index() {
         ObjectMapper objectMapper = new ObjectMapper();
         SummonerDto summoner = null;	// DTO
-
         String SummonerName = "허브밀크";//name.replaceAll(" ", "%20");
-        String requestURL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+ SummonerName + "?api_key=" + Key;
-
+        String requestURL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+ SummonerName + "?api_key=" + configProperty.getRiot();
+        System.out.println(requestURL);
         String index = "";
         try {
             HttpClient client = HttpClientBuilder.create().build(); // HttpClient 생성

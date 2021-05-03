@@ -6,7 +6,7 @@ import java.util.Date;
 
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class SummonerDto {
         private String id;
         private String accountId;

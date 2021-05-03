@@ -1,0 +1,18 @@
+server:
+  port: 8080
+  #address: 192.168.1.100
+---
+spring:
+  profiles: development
+server:
+  address: 127.0.0.1
+---
+spring:
+  profiles: production & eu-central
+server:
+  address: 192.168.1.120
+---
+spring:
+  profiles:
+    include:
+      - private
