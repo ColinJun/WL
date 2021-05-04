@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @ConfigurationProperties("key")
@@ -26,9 +27,15 @@ public class HelloController {
 
     @GetMapping("/")
     public String index() {
+        return "index";
+    }
+
+    @RequestMapping(value="/summoner/{id}", method=RequestMethod.GET)
+    public String getPlayers(@PathVariable("id") final String id, Model model) throws Exception{
+
         ObjectMapper objectMapper = new ObjectMapper();
         SummonerDto summoner = null;	// DTO
-        String SummonerName = "허브밀크";//name.replaceAll(" ", "%20");
+        String SummonerName = id;//name.replaceAll(" ", "%20");
         String requestURL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+ SummonerName + "?api_key=" + configProperty.getRiot();
         System.out.println(requestURL);
         String index = "";
@@ -38,9 +45,6 @@ public class HelloController {
 
             HttpResponse response = client.execute(getRequest);
 
-
-            //Response 출력
-            System.out.println(response);
             if (response.getStatusLine().getStatusCode() == 200) {
                 ResponseHandler<String> handler = new BasicResponseHandler();
                 String body = handler.handleResponse(response);
@@ -48,28 +52,15 @@ public class HelloController {
                 //System.out.println(summoner);
                 index = summoner.getName()+"님의 소환사 레벨은 "+summoner.getSummonerLevel()+"입니다";
                 System.out.println(summoner.getName()+"님의 소환사 레벨은 "+summoner.getSummonerLevel()+"입니다");
+                System.out.println(summoner);
             }
+            model.addAttribute("summoner", summoner);
         } catch (Exception e){
             System.err.println(e.toString());
         }
 
 
-
-        return "index";
-    }
-
-    @RequestMapping(value="/player/{id}", method=RequestMethod.GET)
-    public Player getPlayers(@PathVariable("id") final String id) throws Exception{
-
-        Player player;
-
-        if(RestApplication.PlayerHm.containsKey(id)) {
-            player = RestApplication.PlayerHm.get(id);
-        } else {
-            throw new Exception("Player " + id + "does not exists");
-        }
-
-        return player;
+        return "summoner";
     }
 
 
