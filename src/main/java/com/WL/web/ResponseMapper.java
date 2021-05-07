@@ -22,9 +22,9 @@ public class ResponseMapper {
         try {
             HttpClient client = HttpClientBuilder.create().build(); // HttpClient 생성
             HttpGet getRequest = new HttpGet(requestURL); //GET 메소드 URL 생성
-
+            System.out.println("받아오나"+getRequest);
             HttpResponse response = client.execute(getRequest);
-            System.out.println(classDto);
+            System.out.println("받아오나4"+response);
             if (response.getStatusLine().getStatusCode() == 200) {
                 ResponseHandler<String> handler = new BasicResponseHandler();
                 String body = handler.handleResponse(response);

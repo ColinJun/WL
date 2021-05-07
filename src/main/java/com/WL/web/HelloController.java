@@ -1,9 +1,6 @@
 package com.WL.web;
 
-import com.WL.web.dto.HelloResponseDto;
-import com.WL.web.dto.Info;
-import com.WL.web.dto.MatchDto;
-import com.WL.web.dto.SummonerDto;
+import com.WL.web.dto.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpResponse;
@@ -62,12 +59,21 @@ public class HelloController {
         MatchDto match =  (MatchDto) object;
         model.addAttribute("match", match);
 
+        String gameId = "";
         for (int i = 0; i < match.getMatches().size(); i++){
             LinkedHashMap map = (LinkedHashMap) match.getMatches().get(i);
             System.out.println(map.get("champion"));
+            System.out.println(map.get("gameId"));
+            gameId = Long.toString((Long) map.get("gameId"));
+            System.out.println(map.get("season"));
         }
         /* 매치 상세 정보 */
 
+        requestURL = "https://kr.api.riotgames.com/lol/match/v4/matches/"+ gameId + "?api_key=" + configProperty.getRiot();;//"https://ddragon.leagueoflegends.com/api/versions.json";
+        object = responseMapper.getRiotData(requestURL, MatchDetailDto.class);
+        MatchDetailDto matchDetail =  (MatchDetailDto) object;
+        System.out.println("ㅋㅋ"+matchDetail);
+        model.addAttribute("matchDetail", matchDetail);
         return "summoner";
     }
 
