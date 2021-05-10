@@ -47,6 +47,7 @@ public class HelloController {
 
         /* 소환사 정보 */
         requestURL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+ summonerName + "?api_key=" + configProperty.getRiot();
+
         object = responseMapper.getRiotData(requestURL, SummonerDto.class);
         SummonerDto summoner = (SummonerDto) object;
         model.addAttribute("summoner", summoner);
@@ -60,19 +61,34 @@ public class HelloController {
         model.addAttribute("match", match);
 
         String gameId = "";
+        int myChampion = -1;
         for (int i = 0; i < match.getMatches().size(); i++){
             LinkedHashMap map = (LinkedHashMap) match.getMatches().get(i);
-            System.out.println(map.get("champion"));
-            System.out.println(map.get("gameId"));
+            myChampion = (int) map.get("champion");
+            //System.out.println(map.get("champion"));
             gameId = Long.toString((Long) map.get("gameId"));
-            System.out.println(map.get("season"));
         }
         /* 매치 상세 정보 */
 
         requestURL = "https://kr.api.riotgames.com/lol/match/v4/matches/"+ gameId + "?api_key=" + configProperty.getRiot();;//"https://ddragon.leagueoflegends.com/api/versions.json";
         object = responseMapper.getRiotData(requestURL, MatchDetailDto.class);
         MatchDetailDto matchDetail =  (MatchDetailDto) object;
-        System.out.println("ㅋㅋ"+matchDetail);
+
+        String gameResult = (String) ((LinkedHashMap) matchDetail.getTeams().get(0)).get("win");
+        System.out.println(gameResult);
+
+
+        for (int i = 0; i < matchDetail.getParticipants().size(); i++){
+            LinkedHashMap map = (LinkedHashMap) matchDetail.getParticipants().get(i);
+
+            if( (int) map.get("championId") == myChampion){
+                if(i < 5){
+                    System.out.println("왼쪽팀입니다. 왼쪽 팀은"+gameResult+"했습니다.");
+                }else{
+                    System.out.println("오른쪽팀입니다. 오른쪽 팀은"+gameResult+"하지못했습니다.");
+                }
+            }
+        }
         model.addAttribute("matchDetail", matchDetail);
         return "summoner";
     }
